@@ -72,4 +72,4 @@ import MoviesList from './components/MoviesList.vue' //무비
 </style>
 
 
-<!-- 58:52 -->
+<!-- 1:02:23 -->
