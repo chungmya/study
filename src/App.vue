@@ -1,12 +1,16 @@
 <template>
   <Navbar />
-  <Event :text="text" />
+  <Event :text="text[eventTextNum]" />
+  <SearchBar :data="data_temp" @searchMovie=" searchMovie($event)"/>
+<p>
+  <button @click="showAllMovie">전체보기</button>
+</p>
 
   <MoviesList 
-  :data="data"
+  :data="data_temp"
   :isModal="isModal"
   :selectedMovie="selectedMovie"
-  @openMdal="isModal=true; selectedMovie=$event"
+  @openMdal="isModal=true;selectedMovie=$event"
   @increaseLike="increaseLike($event)"
   />
 
@@ -28,23 +32,45 @@ import Navbar from './components/Navbar.vue';
 import Modal from './components/Modal.vue';
 import Event from './components/Event.vue'; //이벤트 박스
 import MoviesList from './components/MoviesList.vue' //무비 
+import SearchBar from './components/SearchBar.vue' //검색창
 
   export default {
     name: 'App',
     data() {
       return {
         isModal: false,
-        data : data,
+        data : data, //원본
+        data_temp: [...data], //사본
         selectedMovie:0,
         textRed: {
           color:'red'
         },
-        text: "이벤트 내용이 들어갑니다"
+        text: [
+          'nexflix 어쩌고 저쩌고',
+          '디즈니 100주년 어쩌고 저쩌고 광고',
+          '그날, 대한민국의 운명이 바뀌었다 영화 광고 내용'
+        ],
+        eventTextNum : 0,
+        interval : null,
     }
   },
   methods: {
-    increaseLike(i) {
-      this.data[i].like += 1;
+    increaseLike(id) {
+      //this.data[i].like += 1;
+      this.data.find(movie => {
+        if(movie.id == id) {
+          movie.like += 1;
+        }
+      })
+    },
+    searchMovie(title) {
+      //영화 제목이 포함된 데이터를 가져옴
+      this.data_temp = this.data.filter(movie => {
+        return movie.title.includes(title);
+      })
+    },
+    showAllMovie() {
+      this.data_temp = [...this.data];
     }
   },
   components: {
@@ -52,6 +78,20 @@ import MoviesList from './components/MoviesList.vue' //무비
     Modal: Modal,
     Event: Event,
     MoviesList: MoviesList,
+    SearchBar: SearchBar,
+  },
+  mounted() {
+    console.log('mounted');
+    this.interval = setInterval(()=> {
+      if(this.eventTextNum == this.text.length - 1) {
+        this.eventTextNum = 0;
+      } else {
+        this.eventTextNum += 1;
+      }
+    }, 3000);
+  },
+  unmounted() {
+    clearInterval(this.interval);//인터벌 해제
   }
 }
 </script>
@@ -72,4 +112,4 @@ import MoviesList from './components/MoviesList.vue' //무비
 </style>
 
 
-<!-- 1:02:23 -->
+<!-- 1:16:59 -->
