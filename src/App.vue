@@ -112,4 +112,4 @@ import SearchBar from './components/SearchBar.vue' //검색창
 </style>
 
 
-<!-- 1:16:59 -->
+<!-- 끝 -->
